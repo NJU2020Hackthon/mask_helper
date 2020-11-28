@@ -48,6 +48,7 @@ Page({
         console.log("初始化成功");
       },
       fail: err => {
+        console.log(err);
         console.log("初始化失败");
       }
     })
@@ -79,7 +80,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
@@ -108,8 +109,8 @@ Page({
       name: 'test1',
       //发送经度 维度 状态
       data: {
-        longitude:this.data.longitude,
-        latitude:this.data.latitude,
+        longitude: this.data.longitude,
+        latitude: this.data.latitude,
         status: 2
       },
       success: res => {
@@ -119,7 +120,7 @@ Page({
         console.log('callFunction test result0: ', res)
         wx.showToast({
           title: '已发送求助信息',
-          
+
         })
       },
       fail: err => {
@@ -136,15 +137,14 @@ Page({
       name: 'test1',
       //发送经度 维度 状态
       data: {
-        longitude:this.data.longitude,
-        latitude:this.data.latitude,
+        longitude: this.data.longitude,
+        latitude: this.data.latitude,
         status: 3
       },
       success: res => {
         this.setData({
-          status:3
-        }
-        )
+          status: 3
+        })
         wx.showToast({
           title: '已录入信息',
         })
@@ -224,30 +224,76 @@ Page({
   //获取所有点的数据
   getpoints: function () {
     this.getpos();
-    var json=[];
+    var that = this;
     wx.cloud.callFunction({
-      name:'getpoints',
-      data:{
-        longitude:this.data.longitude,
-        latitude:this.data.latitude
+      name: 'getpoints',
+      data: {
+        longitude: this.data.longitude,
+        latitude: this.data.latitude
       },
-      success:res=>{
-        console.log(res);
-        json=res;
+      success: res => {
+        var json = [];
+        res.result.data.forEach(function (item) {
+          var temp = {};
+          if (item.state === "1") {
+            temp["id"] = json.length;
+            temp["iconPath"] = "../../images/position.png"
+            temp["longitude"] = item.location.coordinates[0];
+            temp["latitude"] = item.location.coordinates[1];
+            temp["width"] = 20;
+            temp["height"] = 20;
+            temp["_openid"] = item._openid;
+            
+            // iconPath: "../../images/position.png",
+            // latitude: 32.013,
+            // longitude: 118.72,
+            // width: 20, //图片显示宽度
+            // height: 20 //图片显示高度
+          };
+          json.push(temp);
+        });
+        that.setData({
+          markers:json
+        })
       },
-      fail:err=>{
+      fail: err => {
         console.log("获取失败");
         console.log(err);
       }
     })
-
+    this.send5();
   },
   //获取系统匹配的愿意帮助我的人
+  send5: function () {
+    for(var i=0;i<5&&i<this.data.markers.length;i++)
+    {
+      var that = this;
+      console.log(that.data)
+      wx.cloud.callFunction({
+        name:"hook_create",
+        data:{
+          helperid:that.data.markers[i]._openid,
+          longitude:that.data.markers[i].longitude,
+          latitude:that.data.markers[i].latitude
+        },
+        success: res => {
+          //console.log(that.data.markers[i]._openid);
+          console.log("上传成功");
+        },
+        fail: err => {
+          //console.log(that.data.markers[i]._openid);
+          console.log(err);
+          console.log("上传失败");
+        }
+
+      })
+    }
+  },
   gettarget:function(){
 
   },
   //帮助者决定是否帮助某人
-  decide:function(){
+  decide: function () {
 
   }
 })
