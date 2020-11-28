@@ -272,10 +272,10 @@ Page({
   },
   //获取系统匹配的愿意帮助我的人
   send5: function () {
-    console.log(this.data.markers)
-    console.log("I am here")
-    console.log(this.data.markers[0]._openid)
-    for(var i=0;i<3&&i<this.data.markers.length;i++)
+   // console.log(this.data.markers)
+    //console.log("I am here")
+    //console.log(this.data.markers[0]._openid)
+    for(var i=0;i<5&&i<this.data.markers.length;i++)
     {
       var that = this;
      // console.log(that.data)
@@ -287,6 +287,7 @@ Page({
         success: res => {
           //console.log(that.data.markers[i]._openid);
           console.log("上传成功");
+          console.log(res.result)
         },
         fail: err => {
           //console.log(that.data.markers[i]._openid);

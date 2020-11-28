@@ -8,17 +8,22 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   //(event.helperid)表示event传入 表示修改helperid对应的表象的helpid
   helpid=event.helperid
+
   db.collection('userdata').where({
     _openid:helpid
   }).update({
+    data:{
     help_openid:wxContext.OPENID,
     help_state:true,
-    changed:true
+    changed:true}
   })
 
-
+ return db.collection('userdata').where({
+    _openid:wxContext.OPENID
+  }).get()
   return {
     event,
+    helpid,
     openid: wxContext.OPENID,
     appid: wxContext.APPID,
     unionid: wxContext.UNIONID,
