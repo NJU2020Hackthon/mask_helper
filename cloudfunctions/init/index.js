@@ -11,7 +11,10 @@ exports.main = async (event, context) => {
     data:{
       _openid: wxContext.OPENID,
       state:1,
-      location: db.Geo.Point(event.longitude, event.latitude)
+      location: db.Geo.Point(event.longitude, event.latitude),
+      help_state:false,
+      help_openid:"",
+      changed=false
     }
   })
 

@@ -12,15 +12,19 @@ exports.main = async (event, context) => {
   }).update({
     location: db.Geo.Point(event.longitude,event.latitude)
   })
-  const _ = db.command
+  const _= db.command
   return db.collection('userdata').where({
     location:_.geoNear(
       {
         geometry:db.Geo.Point(event.longitude,event.latitude),
-        minDistance:10,
+        minDistance:1,
         maxDistance:1000,
       }
     )
   }).get()
+  // return {
+  //   longitude:event.longitude,
+  //   latitude:event.latitude
+  // }
 
 }
