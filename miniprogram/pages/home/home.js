@@ -1,8 +1,10 @@
 // pages/home/home.js
+const app = getApp()
 Page({
   data: {
     longitude: 118.72,  //默认定位经度
     latitude: 32.013,   //默认定位纬度
+    status:0,
     markers: [
     {
       id: 0,
@@ -99,5 +101,57 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  onBtnclick_1: function() {
+    // 调用云函数
+    wx.cloud.callFunction({
+      name: 'test1',
+      //发送经度 维度 状态
+      data: {
+        longitude:this.data.longitude,
+        latitude:this.data.latitude,
+        status:1
+      },
+      success: res => {
+        this.setData({
+          status:1
+        }
+        )
+        wx.showToast({
+          title: '已发送求助信息',
+        })
+      },
+      fail: err => {
+        wx.showToast({
+          title: '求助失败',
+        })
+      }
+    })
+  },
+  onBtnclick_2: function() {
+    // 调用云函数
+    wx.cloud.callFunction({
+      name: 'test1',
+      //发送经度 维度 状态
+      data: {
+        longitude:this.data.longitude,
+        latitude:this.data.latitude,
+        status:2
+      },
+      success: res => {
+        this.setData({
+          status:2
+        }
+        )
+        wx.showToast({
+          title: '已录入信息',
+        })
+      },
+      fail: err => {
+        wx.showToast({
+          title: '录入信息失败',
+        })
+      }
+    })
   }
 })
