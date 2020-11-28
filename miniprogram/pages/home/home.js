@@ -126,7 +126,7 @@ Page({
         this.setData({
           status: 2
         })
-        console.log('callFunction test result0: ', res),
+        console.log('callFunction test result0: ', res)
         wx.showToast({
           title: '已发送求助信息',
           
@@ -233,8 +233,24 @@ Page({
   },
   //获取所有点的数据
   getpoints: function () {
+    this.getpos();
     var json=[];
-    wx.cloud.callFunction({})
+    wx.cloud.callFunction({
+      name:'getpoints',
+      data:{
+        longitude:this.data.longitude,
+        latitude:this.data.latitude
+      },
+      success:res=>{
+        console.log(res);
+        json=res;
+      },
+      fail:err=>{
+        console.log("获取失败");
+        console.log(err);
+      }
+    })
+
   },
   //获取系统匹配的愿意帮助我的人
   gettarget:function(){
