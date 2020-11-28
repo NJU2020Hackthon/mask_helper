@@ -6,30 +6,51 @@ const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  
-  db.collection('userdata').doc("0bcbdde05fc1eca90062944b4889d0f9").get({
-    success:res=>{
-      db.collection('userdata').doc(wxContext.OPENID).update({
-          data:{
-            state:"2"
-          },
-          success: res=>{
-            console.log(res)
-          },
-          false:err=>{
-            console.log(err)
-          }
-      })
-    },
-    false:err=>{
-      console.log(err),
-      db.collection('userdata').add({
-        data:{
-          state:"1"
-        }
-      })
+  // db.collection('userdata').add({
+  //   data:{
+  //     _openid:wxContext.OPENID,
+  //     state:"2"
+  //   }
+  // })
+  db.collection('userdata').where({
+    _openid: wxContext.OPENID
+  }).remove()
+  db.collection('userdata').add({
+    data:{
+      _openid: wxContext.OPENID,
+      state:"2"
     }
   })
+
+  
+  // if (temp.data.valueOf()==Array){
+    
+  //   db.collection('userdata').add({
+  //     data:{
+  //       _openid:wxContext.OPENID,
+  //       state:"2"
+  //       }
+  //   })
+  // }else{
+  //   //return temp.data
+  //   db.collection('userdata').where({
+  //       _openid: wxContext.OPENID
+  //     }).update({
+  //       data:{
+  //         state:"3"
+  //       }
+  //     })
+  // }
+  return   db.collection('userdata').where({
+    _openid: wxContext.OPENID
+  }).get()
+
+  
+  
+  // return db.collection('userdata').where({
+  //   _openid: wxContext.OPENID
+  // }).get()
+  //return db.collection('userdata').get()
 
   return {
     openid: wxContext.OPENID,
