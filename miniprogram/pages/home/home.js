@@ -2,9 +2,11 @@
 const app = getApp()
 Page({
   data: {
-    longitude: 118.72,  //默认定位经度
-    latitude: 32.013,   //默认定位纬度
+    longitude: 0,  //默认定位经度
+    latitude: 0,   //默认定位纬度
     status:0,
+    target_longitude: 118.72, //导航目标定位经度
+    target_latitude: 32.013,  //导航目标定位纬度
     markers: [
     {
       id: 0,
@@ -34,23 +36,8 @@ Page({
   },
  
   onLoad: function () {
-    // var that = this;
-    // wx.getLocation({
-    //   type: "wgs84",
-    //   success: function (res) {
-    //     var latitude = res.latitude;
-    //     var longitude = res.longitude;
-    //     //console.log(res.latitude);
-    //     that.setData({
-    //       latitude: res.latitude,
-    //       longitude: res.longitude,
-    //       markers: [{
-    //         latitude: res.latitude,
-    //         longitude: res.longitude
-    //       }]
-    //     })
-    //   }
-    // })
+    this.getpos();
+    //this.sendpos();
   },
   
 
@@ -156,5 +143,75 @@ Page({
         })
       }
     })
+  },
+  //定位到自己的位置 并向服务器发送自己的位置
+  setlocal:function(){
+    console.log("in");
+    let mpCtx = wx.createMapContext("map");
+    mpCtx.moveToLocation();
+    // this.sendpos();
+  },
+  //获取自己的位置信息
+  getpos:function(){
+    var that = this;
+    wx.getLocation({
+      type: "wgs84",
+      success: function (res) {
+        // var latitude = res.latitude;
+        // var longitude = res.longitude;
+        //console.log(res.latitude);
+        that.setData({
+          latitude: res.latitude,
+          longitude: res.longitude,
+        })
+      }
+    })
+  },
+  //向服务器发送位置
+  sendpos:function(){
+    this.getpos();
+    wx.cloud.callFunction({
+      name: 'test3',
+      //发送经度 维度 状态
+      data: {
+        longitude:that.data.longitude,
+        latitude:that.data.latitude
+      },
+      success: res => {
+        console.log("上传位置");
+      },
+      fail: err => {
+        console.log("上传失败");
+      }
+    })
+  },
+  //导航到target
+  get_mask_navigateTo:function(){
+    let plugin = requirePlugin('routePlan');
+    let key = 'OUJBZ-KGR6U-H3OVS-2GLWY-FNU73-KKBXB'; //使用在腾讯位置服务申请的key
+    let referer = '口罩互助'; //调用插件的app的名称
+    let endPoint = JSON.stringify({ //终点
+      'name': '提供口罩的好心人',
+      'latitude': this.data.target_latitude,
+      'longitude': this.data.target_longitude
+    });
+    wx.navigateTo({
+      url: 'plugin://routePlan/index?key=' + key + '&referer=' + referer + '&endPoint=' + endPoint
+    });
+  },
+
+  //设定导航目标的经度纬度
+  setTargetLocation: function(latitude, longitude){
+    this.setData({
+      target_latitude: latitude,
+      target_longitude: longitude
+    });  
+  },  
+  navigator:function(){
+    //gettarget();
+    this.get_mask_navigateTo();
+  },
+  //获取所有点的数据
+  getpoints:function(){
   }
 })
