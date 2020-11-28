@@ -19,36 +19,13 @@ exports.main = async (event, context) => {
     data:{
       state:event.status,
       location: db.Geo.Point(event.longitude, event.latitude)
+    },
+    false:err=>{
+      return err
     }
-  })
+  }
+  )
 
-  // db.collection('userdata').add({
-  //   data:{
-  //     _openid: wxContext.OPENID,
-  //     state:event.status,
-  //     location: db.Geo.Point(event.longitude, event.latitude)
-  //   }
-  // })
-
-  
-  // if (temp.data.valueOf()==Array){
-    
-  //   db.collection('userdata').add({
-  //     data:{
-  //       _openid:wxContext.OPENID,
-  //       state:"2"
-  //       }
-  //   })
-  // }else{
-  //   //return temp.data
-  //   db.collection('userdata').where({
-  //       _openid: wxContext.OPENID
-  //     }).update({
-  //       data:{
-  //         state:"3"
-  //       }
-  //     })
-  // }
   return   db.collection('userdata').where({
     _openid: wxContext.OPENID
   }).get()

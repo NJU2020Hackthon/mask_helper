@@ -117,7 +117,7 @@ Page({
         this.setData({
           status: 2
         })
-        console.log('callFunction test result0: ', res)
+        console.log('callFunction test result: ', res.result.data),
         wx.showToast({
           title: '已发送求助信息',
 
