@@ -9,6 +9,7 @@ Page({
     target_latitude: 32.013, //导航目标定位纬度
     markers: [{
         id: 0,
+        _openid:"able1",
         iconPath: "../../images/position.png",
         latitude: 32.013,
         longitude: 118.72,
@@ -17,6 +18,7 @@ Page({
       },
       {
         id: 1,
+        _openid:"able1",
         iconPath: "../../images/position.png",
         latitude: 32.2,
         longitude: 118.73,
@@ -25,6 +27,7 @@ Page({
       },
       {
         id: 2,
+        _openid:"able1",
         iconPath: "../../images/position.png",
         latitude: 32.3,
         longitude: 118.67,
@@ -269,14 +272,17 @@ Page({
   },
   //获取系统匹配的愿意帮助我的人
   send5: function () {
-    console.log(this.data.first5);
+    console.log(this.data.markers)
+    console.log("I am here")
+    console.log(this.data.markers[0]._openid)
     for(var i=0;i<3&&i<this.data.markers.length;i++)
     {
       var that = this;
+     // console.log(that.data)
       wx.cloud.callFunction({
         name:"hook_create",
         data:{
-          helperid:that.data.markers[i]["_openid"]
+          helperid:that.data.markers[i]._openid
         },
         success: res => {
           //console.log(that.data.markers[i]._openid);
@@ -284,7 +290,7 @@ Page({
         },
         fail: err => {
           //console.log(that.data.markers[i]._openid);
-          console.log(err);
+          //sconsole.log(err);
           console.log("上传失败");
         }
 

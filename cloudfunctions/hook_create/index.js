@@ -6,17 +6,16 @@ const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  //用户刚刚进入小程序 在数据库里面登记他
-    db.collection('userdata').add({
-    data:{
-      _openid: wxContext.OPENID,
-      state:1,
-      location: db.Geo.Point(event.longitude, event.latitude),
-      help_state:false,
-      help_openid:"",
-      changed:false
-    }
+  //(event.helperid)表示event传入 表示修改helperid对应的表象的helpid
+  helpid=event.helperid
+  db.collection('userdata').where({
+    _openid:helpid
+  }).update({
+    help_openid:wxContext.OPENID,
+    help_state:true,
+    changed:true
   })
+
 
   return {
     event,
