@@ -9,7 +9,7 @@ exports.main = async (event, context) => {
   //(event.helperid)表示event传入 表示修改helperid对应的表象的helpid
   helpid=event.helperid
   db.collection('userdata').where({
-    _openid:helperid
+    _openid:helpid
   }).update({
     help_openid:wxContext.OPENID,
     help_state:true,
