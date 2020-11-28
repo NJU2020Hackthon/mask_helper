@@ -35,16 +35,6 @@ Page({
   },
 
   onLoad: function () {
-    wx.cloud.callFunction({
-      name: 'deleteall',
-      data: {},
-      success: res => {
-        console.log("退出成功");
-      },
-      fail: err => {
-        console.log("退出失败");
-      }
-    })
     var that = this;
     this.getpos();
     wx.cloud.callFunction({
@@ -233,8 +223,24 @@ Page({
   },
   //获取所有点的数据
   getpoints: function () {
+    this.getpos();
     var json=[];
-    wx.cloud.callFunction({})
+    wx.cloud.callFunction({
+      name:'getpoints',
+      data:{
+        longitude:this.data.longitude,
+        latitude:this.data.latitude
+      },
+      success:res=>{
+        console.log(res);
+        json=res;
+      },
+      fail:err=>{
+        console.log("获取失败");
+        console.log(err);
+      }
+    })
+
   },
   //获取系统匹配的愿意帮助我的人
   gettarget:function(){

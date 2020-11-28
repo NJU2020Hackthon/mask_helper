@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/welcome",
     "pages/home/home",
     "pages/index/index",
     "pages/userConsole/userConsole",
@@ -24,16 +25,15 @@
   },
   "permission": {
     "scope.userLocation": {
-      "desc": "你的位置信息将用于小程序位置接口的效果展示" 
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
     }
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",
   "plugins": {
     "routePlan": {
-    "version": "1.0.8",
-    "provider": "wx50b5593e81dd937a"
+      "version": "1.0.8",
+      "provider": "wx50b5593e81dd937a"
     }
   }
-
 }

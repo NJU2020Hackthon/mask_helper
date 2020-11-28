@@ -5,7 +5,7 @@
     style="width: 100%; height: 100vh;">
     <cover-view class="refresh">
       <cover-view class="refresh_area">
-        <cover-image class="refresh_img" src="../../images/refresh.png" bindtap="getdata"></cover-image>
+        <cover-image class="refresh_img" src="../../images/refresh.png" bindtap="getpoints"></cover-image>
       </cover-view>
       <cover-view class="navigator_area">
         <cover-image class="navigator" src="../../images/navigation.png" bindtap="navigator"></cover-image>
