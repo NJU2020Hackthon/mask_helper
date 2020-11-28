@@ -35,16 +35,6 @@ Page({
   },
 
   onLoad: function () {
-    wx.cloud.callFunction({
-      name: 'deleteall',
-      data: {},
-      success: res => {
-        console.log("退出成功");
-      },
-      fail: err => {
-        console.log("退出失败");
-      }
-    })
     var that = this;
     this.getpos();
     wx.cloud.callFunction({
