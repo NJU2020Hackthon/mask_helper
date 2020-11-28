@@ -265,7 +265,6 @@ Page({
   },
   //获取系统匹配的愿意帮助我的人
   send5: function () {
-   // console.log(this.data.markers[i][_openid]);
     for(var i=0;i<3&&i<this.data.markers.length;i++)
     {
       var that = this;
