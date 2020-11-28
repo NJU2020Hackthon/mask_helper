@@ -113,12 +113,14 @@ Page({
         status:1
       },
       success: res => {
-        this.setData({
-          status:1
-        }
-        )
+        // this.setData({
+        //   status:1
+        // },
+        // )
+        console.log('callFunction test result: ', res.result.openid),
         wx.showToast({
           title: '已发送求助信息',
+          
         })
       },
       fail: err => {
