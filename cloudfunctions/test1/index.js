@@ -5,6 +5,7 @@ cloud.init()
 const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
+  //修改对应用户的state信息，改成2 表示 正在求助
   const wxContext = cloud.getWXContext()
   // db.collection('userdata').add({
   //   data:{
