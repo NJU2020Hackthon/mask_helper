@@ -97,7 +97,7 @@ Page({
       data: {
         longitude:this.data.longitude,
         latitude:this.data.latitude,
-        status:1
+        status:2
       },
       success: res => {
         // this.setData({
@@ -126,11 +126,11 @@ Page({
       data: {
         longitude:this.data.longitude,
         latitude:this.data.latitude,
-        status:2
+        status:3
       },
       success: res => {
         this.setData({
-          status:2
+          status:3
         }
         )
         wx.showToast({

@@ -5,7 +5,7 @@ cloud.init()
 const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
-  //修改对应用户的state信息，改成2 表示 正在求助
+  //修改对应用户的state信息，改成2 表示 正在求助;进行地理位置的初始化
   const wxContext = cloud.getWXContext()
   // db.collection('userdata').add({
   //   data:{
@@ -15,13 +15,20 @@ exports.main = async (event, context) => {
   // })
   db.collection('userdata').where({
     _openid: wxContext.OPENID
-  }).remove()
-  db.collection('userdata').add({
+  }).update({
     data:{
-      _openid: wxContext.OPENID,
-      state:"2"
+      state:event.status,
+      location: db.Geo.Point(event.longitude, event.latitude)
     }
   })
+
+  // db.collection('userdata').add({
+  //   data:{
+  //     _openid: wxContext.OPENID,
+  //     state:event.status,
+  //     location: db.Geo.Point(event.longitude, event.latitude)
+  //   }
+  // })
 
   
   // if (temp.data.valueOf()==Array){
