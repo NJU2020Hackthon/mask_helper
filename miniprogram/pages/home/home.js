@@ -2,20 +2,19 @@
 const app = getApp()
 Page({
   data: {
-    longitude: 0,  //默认定位经度
-    latitude: 0,   //默认定位纬度
-    status:0,
+    longitude: 0, //默认定位经度
+    latitude: 0, //默认定位纬度
+    status: 1,
     target_longitude: 118.72, //导航目标定位经度
-    target_latitude: 32.013,  //导航目标定位纬度
-    markers: [
-    {
-      id: 0,
+    target_latitude: 32.013, //导航目标定位纬度
+    markers: [{
+        id: 0,
         iconPath: "../../images/position.png",
         latitude: 32.013,
         longitude: 118.72,
-      width: 20,  //图片显示宽度
-      height: 20  //图片显示高度
-    },
+        width: 20, //图片显示宽度
+        height: 20 //图片显示高度
+      },
       {
         id: 1,
         iconPath: "../../images/position.png",
@@ -34,12 +33,26 @@ Page({
       }
     ]
   },
- 
+
   onLoad: function () {
+    var that = this;
     this.getpos();
-    //this.sendpos();
+    wx.cloud.callFunction({
+      name: 'init',
+      //发送经度 维度 状态
+      data: {
+        longitude: that.data.longitude,
+        latitude: that.data.latitude
+      },
+      success: res => {
+        console.log("初始化成功");
+      },
+      fail: err => {
+        console.log("初始化失败");
+      }
+    })
   },
-  
+
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -66,7 +79,16 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    wx.cloud.callFunction({
+      name: 'deleteall',
+      data: {},
+      success: res => {
+        console.log("退出成功");
+      },
+      fail: err => {
+        console.log("退出失败");
+      }
+    })
   },
 
   /**
@@ -89,21 +111,18 @@ Page({
   onShareAppMessage: function () {
 
   },
-  onBtnclick_1: function() {
-    // 调用云函数
+  //向服务器发送状态 2代表求助
+  onBtnclick_1: function () {
     wx.cloud.callFunction({
       name: 'test1',
       //发送经度 维度 状态
       data: {
-        longitude:this.data.longitude,
-        latitude:this.data.latitude,
-        status:1
+        status: 2
       },
       success: res => {
         this.setData({
-          status:1
-        }
-        )
+          status: 2
+        })
         wx.showToast({
           title: '已发送求助信息',
         })
@@ -115,21 +134,18 @@ Page({
       }
     })
   },
-  onBtnclick_2: function() {
+  onBtnclick_2: function () {
     // 调用云函数
     wx.cloud.callFunction({
       name: 'test1',
       //发送经度 维度 状态
       data: {
-        longitude:this.data.longitude,
-        latitude:this.data.latitude,
-        status:2
+        status: 3
       },
       success: res => {
         this.setData({
-          status:2
-        }
-        )
+          status: 3
+        })
         wx.showToast({
           title: '已录入信息',
         })
@@ -142,14 +158,14 @@ Page({
     })
   },
   //定位到自己的位置 并向服务器发送自己的位置
-  setlocal:function(){
+  setlocal: function () {
     console.log("in");
     let mpCtx = wx.createMapContext("map");
     mpCtx.moveToLocation();
     // this.sendpos();
   },
   //获取自己的位置信息
-  getpos:function(){
+  getpos: function () {
     var that = this;
     wx.getLocation({
       type: "wgs84",
@@ -165,14 +181,15 @@ Page({
     })
   },
   //向服务器发送位置
-  sendpos:function(){
+  sendpos: function () {
+    var that = this;
     this.getpos();
     wx.cloud.callFunction({
       name: 'test3',
       //发送经度 维度 状态
       data: {
-        longitude:that.data.longitude,
-        latitude:that.data.latitude
+        longitude: that.data.longitude,
+        latitude: that.data.latitude
       },
       success: res => {
         console.log("上传位置");
@@ -183,7 +200,7 @@ Page({
     })
   },
   //导航到target
-  get_mask_navigateTo:function(){
+  get_mask_navigateTo: function () {
     let plugin = requirePlugin('routePlan');
     let key = 'OUJBZ-KGR6U-H3OVS-2GLWY-FNU73-KKBXB'; //使用在腾讯位置服务申请的key
     let referer = '口罩互助'; //调用插件的app的名称
@@ -198,17 +215,16 @@ Page({
   },
 
   //设定导航目标的经度纬度
-  setTargetLocation: function(latitude, longitude){
+  setTargetLocation: function (latitude, longitude) {
     this.setData({
       target_latitude: latitude,
       target_longitude: longitude
-    });  
-  },  
-  navigator:function(){
+    });
+  },
+  navigator: function () {
     //gettarget();
     this.get_mask_navigateTo();
   },
   //获取所有点的数据
-  getpoints:function(){
-  }
+  getpoints: function () {}
 })
