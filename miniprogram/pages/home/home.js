@@ -152,8 +152,9 @@ Page({
       },
       success: res => {
         this.setData({
-          status: 3
-        })
+          status:3
+        }
+        )
         wx.showToast({
           title: '已录入信息',
         })
