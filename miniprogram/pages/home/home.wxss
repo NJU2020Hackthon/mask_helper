@@ -13,7 +13,49 @@ button{
   height:200rpx;
   position:absolute;
   background-color:#999;
-  z-index:9999;
+  z-index:1;
   bottom:0;
   opacity: 0.70;
+}
+.refresh{
+  right:30rpx;
+  left:30rpx;
+  bottom:220rpx;
+  position: fixed;
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.refresh_area{
+  width:80rpx;
+  height:80rpx;
+  background-color: #fff;
+  border-radius: 40rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.navigator_area{
+  width: 120rpx;
+  height:120rpx;
+  background-color: #fff;
+  border-radius: 80rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.refresh_img{
+  width: 50%;
+  height:50%;
+}
+.local_img{
+  width: 50%;
+  height:50%;
+}
+.navigator{
+  width:50%;
+  height:50%;
 }
