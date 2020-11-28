@@ -35,6 +35,16 @@ Page({
   },
 
   onLoad: function () {
+    wx.cloud.callFunction({
+      name: 'deleteall',
+      data: {},
+      success: res => {
+        console.log("退出成功");
+      },
+      fail: err => {
+        console.log("退出失败");
+      }
+    })
     var that = this;
     this.getpos();
     wx.cloud.callFunction({
@@ -79,16 +89,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    wx.cloud.callFunction({
-      name: 'deleteall',
-      data: {},
-      success: res => {
-        console.log("退出成功");
-      },
-      fail: err => {
-        console.log("退出失败");
-      }
-    })
+  
   },
 
   /**
@@ -117,16 +118,14 @@ Page({
       name: 'test1',
       //发送经度 维度 状态
       data: {
+        longitude:this.data.longitude,
+        latitude:this.data.latitude,
         status: 2
       },
       success: res => {
         this.setData({
           status: 2
         })
-        // this.setData({
-        //   status:1
-        // },
-        // )
         console.log('callFunction test result0: ', res),
         wx.showToast({
           title: '已发送求助信息',
@@ -147,6 +146,8 @@ Page({
       name: 'test1',
       //发送经度 维度 状态
       data: {
+        longitude:this.data.longitude,
+        latitude:this.data.latitude,
         status: 3
       },
       success: res => {
@@ -177,9 +178,6 @@ Page({
     wx.getLocation({
       type: "wgs84",
       success: function (res) {
-        // var latitude = res.latitude;
-        // var longitude = res.longitude;
-        //console.log(res.latitude);
         that.setData({
           latitude: res.latitude,
           longitude: res.longitude,
@@ -233,5 +231,16 @@ Page({
     this.get_mask_navigateTo();
   },
   //获取所有点的数据
-  getpoints: function () {}
+  getpoints: function () {
+    var json=[];
+    wx.cloud.callFunction({})
+  },
+  //获取系统匹配的愿意帮助我的人
+  gettarget:function(){
+
+  },
+  //帮助者决定是否帮助某人
+  decide:function(){
+
+  }
 })
