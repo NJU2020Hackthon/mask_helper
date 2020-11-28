@@ -265,16 +265,15 @@ Page({
   },
   //获取系统匹配的愿意帮助我的人
   send5: function () {
-    for(var i=0;i<5&&i<this.data.markers.length;i++)
+   // console.log(this.data.markers[i][_openid]);
+    for(var i=0;i<3&&i<this.data.markers.length;i++)
     {
       var that = this;
       console.log(that.data)
       wx.cloud.callFunction({
         name:"hook_create",
         data:{
-          helperid:that.data.markers[i]._openid,
-          longitude:that.data.markers[i].longitude,
-          latitude:that.data.markers[i].latitude
+          helperid:that.data.markers[i]["_openid"]
         },
         success: res => {
           //console.log(that.data.markers[i]._openid);
