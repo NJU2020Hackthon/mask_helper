@@ -123,11 +123,18 @@ Page({
         this.setData({
           status: 2
         })
+        // this.setData({
+        //   status:1
+        // },
+        // )
+        console.log('callFunction test result0: ', res),
         wx.showToast({
           title: '已发送求助信息',
+          
         })
       },
       fail: err => {
+        console.log('callFunction test result3 failed: ', err)
         wx.showToast({
           title: '求助失败',
         })
