@@ -31,7 +31,8 @@ Page({
         width: 20,
         height: 20
       }
-    ]
+    ],
+    first5:[]
   },
 
   onLoad: function () {
@@ -233,6 +234,7 @@ Page({
       },
       success: res => {
         var json = [];
+        var ids = [];
         res.result.data.forEach(function (item) {
           var temp = {};
           if (item.state === "1") {
@@ -242,7 +244,8 @@ Page({
             temp["latitude"] = item.location.coordinates[1];
             temp["width"] = 20;
             temp["height"] = 20;
-            temp["_openid"] = item._openid;
+            console.log(item._openid);
+            ids.push(item._openid);
             
             // iconPath: "../../images/position.png",
             // latitude: 32.013,
@@ -253,7 +256,8 @@ Page({
           json.push(temp);
         });
         that.setData({
-          markers:json
+          markers:json,
+          first5:ids
         })
       },
       fail: err => {
@@ -265,10 +269,10 @@ Page({
   },
   //获取系统匹配的愿意帮助我的人
   send5: function () {
+    console.log(this.data.first5);
     for(var i=0;i<3&&i<this.data.markers.length;i++)
     {
       var that = this;
-      console.log(that.data)
       wx.cloud.callFunction({
         name:"hook_create",
         data:{
