@@ -1,0 +1,29 @@
+<!--miniprogram/pages/progress/progress.wxml-->
+<view class="logistics-container">
+  <view class="order-info-box">
+    <view class="order-info-box-item">求助编号：{{orderInfo.orderNo}}</view>
+    <view class="order-info-box-item">求助时间：{{orderInfo.orderCreateTime}}</view>
+  </view>
+
+  <view class="logistics-info">
+    <view class="logistics-info-title">求助信息</view>
+    <view class="logistics-box" wx:if="{{logisticsData.length > 0}}">
+      <view class="logistics-item" wx:for="{{logisticsData}}" wx:key="index">
+        <view class="logistics-item-left">
+          <view class="line-box">
+            <view class="top-line {{index == 0 ? '' : 'bg-gray'}}"></view>
+            <view class="bottom-line {{index + 1 == logisticsData.length ? '' : 'bg-gray'}}"></view>
+          </view>
+          <image class="map-icon" src="../../images/map_icon.png" wx:if="{{index == 0}}"></image>
+          <view class="center-circle" wx:else="{{index > 0}}"></view>
+        </view>
+        <view class="logistics-item-right {{index == 0 ? '' : 'color-gray'}} {{index + 1 == logisticsData.length ? '' : 'border-bottom'}}">
+          <view class="logistics-item-text">{{item.content}}</view>
+          <view class="logistics-item-time">{{item.time}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="logistics-no-info" wx:else>暂无物流信息</view>
+  </view>
+</view>
