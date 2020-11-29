@@ -39,6 +39,10 @@ Page({
   },
 
   onLoad: function () {
+    wx.showToast({
+      title: '正在加载',
+      icon:"loading"
+    })
     var that = this;
     this.getpos();
     wx.cloud.callFunction({
@@ -227,6 +231,7 @@ Page({
     {
       wx.showToast({
         title: '您尚未匹配',
+        icon:"none"
       })
       return;
     }

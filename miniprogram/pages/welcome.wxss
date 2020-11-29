@@ -7,17 +7,18 @@ page{
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-weight:bold;
 }
 
 .userinfo-avatar {
-  width: 200rpx;
-  height: 200rpx;
+  width: 240rpx;
+  height: 240rpx;
   margin: 20rpx;
   border-radius: 50%;
 }
 
 .userinfo-nickname {
-  color: #aaa;
+  color: #000;
 }
 
 .usermotto {
