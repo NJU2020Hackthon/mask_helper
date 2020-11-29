@@ -1,5 +1,6 @@
 // pages/home/home.js
 const app = getApp()
+const db = wx.cloud.database()
 Page({
   data: {
     longitude: 0, //默认定位经度
@@ -95,7 +96,7 @@ Page({
   },
 
   /**
-   * 页面上拉触底事件的处理函数
+   * 页面上拉触底事件的处理函数a
    */
   onReachBottom: function () {
 
@@ -133,7 +134,9 @@ Page({
           title: '求助失败',
         })
       }
-    })
+    });
+    this.insertNeedMask();
+    this.watchTheMask();
   },
   onBtnclick_2: function () {
     // 调用云函数
@@ -214,13 +217,6 @@ Page({
     });
   },
 
-  //设定导航目标的经度纬度
-  setTargetLocation: function (latitude, longitude) {
-    this.setData({
-      target_latitude: latitude,
-      target_longitude: longitude
-    });
-  },
   navigator: function () {
     //gettarget();
     if(!this.data.navigate_avail)
@@ -305,5 +301,87 @@ Page({
   //帮助者决定是否帮助某人
   decide: function () {
 
-  }
+  },
+
+    //设定导航目标的经度纬度
+    setTargetLocation: function (longitude, latitude) {
+      this.setData({
+        target_longitude: longitude,
+        target_latitude: latitude,
+      });
+    },
+  
+    //插入空项：请求帮助
+    insertNeedMask:function(){
+      db.collection('pair').add({
+        // data 字段表示需新增的 JSON 数据
+        data: {
+          // _id: 'todo-identifiant-aleatoire', // 可选自定义 _id，在此处场景下用数据库自动分配的就可以了
+          _helpid: ""
+        },
+      });
+    },
+    //从_helpid获取经纬度信息
+    getGeoFrom_helpid:function(helpid){
+      var that = this;
+      db.collection('userdata').where({
+        _openid: helpid,
+      })
+      .get({
+        success: function(res) {
+          that.setTargetLocation(res.data[0].location.longitude, res.data[0].location.latitude);
+          that.setData({
+            navigate_avail:true,
+          })
+        }
+      })
+    },
+    //监听是否有好心人出现
+    watchTheMask: function () {
+      var that = this;
+      var watcher = db.collection('pair')
+        .where({
+          _openid: 'user-open-id',
+        })
+        .watch({
+          onChange: function (snapshot) {
+            if (snapshot.docs[snapshot.docs.length - 1]._helpid != "") {            
+              //写入好心人经纬度信息
+              that.getGeoFrom_helpid(snapshot.docs[snapshot.docs.length - 1]._helpid);
+              wx.showToast({
+                title: '好心人已出现~请导航',
+              })
+              watcher.close();
+            }
+          },
+          onError: function (err) {
+            console.error('the watch closed because of error', err)
+          }
+        })
+      // ...
+      // 等到需要关闭监听的时候调用 close() 方法
+      //watcher.close()
+    },
+  
+  //监听需要帮助的消息
+  watchNeedHelp:function(){
+    var that = this;
+      const watcher = db.collection('userdata')
+      .where({
+        _openid: 'user-open-id',
+      })
+      .watch({
+        onChange: function (snapshot) {
+          //console.log(snapshot.docs);
+          console.log(snapshot.docs[snapshot.docs.length-1]);
+          //写入好心人经纬度信息
+          //that.setTargetLocation(snapshot.docs[0].target_location.coordinates[0], snapshot.docs[0]target_location.coordinates[1])
+        },
+        onError: function (err) {
+          console.error('the watch closed because of error', err)
+        }
+      })
+  },
+
+
 })
