@@ -247,8 +247,7 @@ Page({
             temp["latitude"] = item.location.coordinates[1];
             temp["width"] = 20;
             temp["height"] = 20;
-            console.log(item._openid);
-            ids.push(item._openid);
+            temp["_openid"] = item._openid;
             
             // iconPath: "../../images/position.png",
             // latitude: 32.013,
@@ -272,26 +271,21 @@ Page({
   },
   //获取系统匹配的愿意帮助我的人
   send5: function () {
-   // console.log(this.data.markers)
-    //console.log("I am here")
-    //console.log(this.data.markers[0]._openid)
+    console.log(this.data.markers)
     for(var i=0;i<5&&i<this.data.markers.length;i++)
     {
       var that = this;
-     // console.log(that.data)
       wx.cloud.callFunction({
         name:"hook_create",
         data:{
           helperid:that.data.markers[i]._openid
         },
         success: res => {
-          //console.log(that.data.markers[i]._openid);
           console.log("上传成功");
           console.log(res.result)
         },
         fail: err => {
-          //console.log(that.data.markers[i]._openid);
-          //sconsole.log(err);
+          console.log(err);
           console.log("上传失败");
         }
 
