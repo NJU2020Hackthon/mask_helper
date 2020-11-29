@@ -6,11 +6,17 @@ const db = cloud.database()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  db.collection('userdata').where({
-    _openid: wxContext.OPENID
-  }).update({data:{
-    location: db.Geo.Point(event.longitude,event.latitude)
-  }})
+  //往pair表里面插入，接口需要提供求助人的id(needhelper_id)
+  db.collection('pair').where({
+    _openid: event.needhelper_id
+  }).update({
+    data:{
+      _helpid:wxContext.OPENID
+    }
+  })
+  
+
+
 
   return {
     event,
