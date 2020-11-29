@@ -1,5 +1,6 @@
 // pages/home/home.js
 const app = getApp()
+const db = wx.cloud.database()
 Page({
   data: {
     longitude: 0, //默认定位经度
@@ -9,7 +10,7 @@ Page({
     target_latitude: 32.013, //导航目标定位纬度
     markers: [{
         id: 0,
-        _openid:"able1",
+        _openid: "able1",
         iconPath: "../../images/position.png",
         latitude: 32.013,
         longitude: 118.72,
@@ -18,7 +19,7 @@ Page({
       },
       {
         id: 1,
-        _openid:"able1",
+        _openid: "able1",
         iconPath: "../../images/position.png",
         latitude: 32.2,
         longitude: 118.73,
@@ -27,7 +28,7 @@ Page({
       },
       {
         id: 2,
-        _openid:"able1",
+        _openid: "able1",
         iconPath: "../../images/position.png",
         latitude: 32.3,
         longitude: 118.67,
@@ -35,7 +36,7 @@ Page({
         height: 20
       }
     ],
-    navigate_avail:false
+    navigate_avail: false
   },
 
   onLoad: function () {
@@ -99,7 +100,7 @@ Page({
   },
 
   /**
-   * 页面上拉触底事件的处理函数
+   * 页面上拉触底事件的处理函数a
    */
   onReachBottom: function () {
 
@@ -126,10 +127,10 @@ Page({
           status: 2
         })
         console.log('callFunction test result: ', res.result.data),
-        wx.showToast({
-          title: '已发送求助信息',
+          wx.showToast({
+            title: '已发送求助信息',
 
-        })
+          })
       },
       fail: err => {
         console.log('callFunction test result3 failed: ', err)
@@ -137,7 +138,9 @@ Page({
           title: '求助失败',
         })
       }
-    })
+    });
+    this.insertNeedMask();
+    this.watchTheMask();
   },
   onBtnclick_2: function () {
     // 调用云函数
@@ -218,17 +221,9 @@ Page({
     });
   },
 
-  //设定导航目标的经度纬度
-  setTargetLocation: function (latitude, longitude) {
-    this.setData({
-      target_latitude: latitude,
-      target_longitude: longitude
-    });
-  },
   navigator: function () {
     //gettarget();
-    if(!this.data.navigate_avail)
-    {
+    if (!this.data.navigate_avail) {
       wx.showToast({
         title: '您尚未匹配',
         icon:"none"
@@ -260,7 +255,7 @@ Page({
             temp["width"] = 20;
             temp["height"] = 20;
             temp["_openid"] = item._openid;
-            
+
             // iconPath: "../../images/position.png",
             // latitude: 32.013,
             // longitude: 118.72,
@@ -270,8 +265,8 @@ Page({
           json.push(temp);
         });
         that.setData({
-          markers:json,
-          first5:ids
+          markers: json,
+          first5: ids
         })
       },
       fail: err => {
@@ -284,13 +279,12 @@ Page({
   //获取系统匹配的愿意帮助我的人
   send5: function () {
     console.log(this.data.markers)
-    for(var i=0;i<5&&i<this.data.markers.length;i++)
-    {
+    for (var i = 0; i < 5 && i < this.data.markers.length; i++) {
       var that = this;
       wx.cloud.callFunction({
-        name:"hook_create",
-        data:{
-          helperid:that.data.markers[i]._openid
+        name: "hook_create",
+        data: {
+          helperid: that.data.markers[i]._openid
         },
         success: res => {
           console.log("上传成功");
@@ -304,11 +298,101 @@ Page({
       })
     }
   },
-  gettarget:function(){
+  gettarget: function () {
 
   },
   //帮助者决定是否帮助某人
   decide: function () {
 
-  }
+  },
+
+  //设定导航目标的经度纬度
+  setTargetLocation: function (longitude, latitude) {
+    this.setData({
+      target_longitude: longitude,
+      target_latitude: latitude,
+    });
+  },
+
+  //插入空项：请求帮助
+  insertNeedMask: function () {
+    //删除
+    wx.cloud.callFunction({
+      name: 'deletepair',
+      data: {},
+      success: res => {
+        console.log("pair - 清空");
+      },
+    })
+    db.collection('pair').add({
+      // data 字段表示需新增的 JSON 数据
+      data: {
+        // _id: 'todo-identifiant-aleatoire', // 可选自定义 _id，在此处场景下用数据库自动分配的就可以了
+        _helpid: ""
+      },
+    });
+  },
+  //从_helpid获取经纬度信息
+  getGeoFrom_helpid: function (helpid) {
+    var that = this;
+    db.collection('userdata').where({
+        _openid: helpid,
+      })
+      .get({
+        success: function (res) {
+          that.setTargetLocation(res.data[0].location.longitude, res.data[0].location.latitude);
+          that.setData({
+            navigate_avail: true,
+          })
+        }
+      })
+  },
+  //监听是否有好心人出现
+  watchTheMask: function () {
+    var that = this;
+    var watcher = db.collection('pair')
+      .where({
+        _openid: 'user-open-id',
+      })
+      .watch({
+        onChange: function (snapshot) {
+          if (snapshot.docs[snapshot.docs.length - 1]._helpid != "") {
+            //写入好心人经纬度信息
+            that.getGeoFrom_helpid(snapshot.docs[snapshot.docs.length - 1]._helpid);
+            wx.showToast({
+              title: '好心人已出现~请导航',
+            })
+            watcher.close();
+          }
+        },
+        onError: function (err) {
+          console.error('the watch closed because of error', err)
+        }
+      })
+    // ...
+    // 等到需要关闭监听的时候调用 close() 方法
+    //watcher.close()
+  },
+
+  //监听需要帮助的消息
+  watchNeedHelp: function () {
+    var that = this;
+    const watcher = db.collection('userdata')
+      .where({
+        _openid: 'user-open-id',
+      })
+      .watch({
+        onChange: function (snapshot) {
+          //console.log(snapshot.docs);
+          console.log(snapshot.docs[snapshot.docs.length - 1]);
+          //写入好心人经纬度信息
+          //that.setTargetLocation(snapshot.docs[0].target_location.coordinates[0], snapshot.docs[0]target_location.coordinates[1])
+        },
+        onError: function (err) {
+          console.error('the watch closed because of error', err)
+        }
+      })
+  },
+
+
 })
