@@ -46,22 +46,33 @@ Page({
       icon: "loading"
     })
     var that = this;
-    this.getpos();
-    wx.cloud.callFunction({
-      name: 'init',
-      //发送经度 维度 状态
-      data: {
-        longitude: that.data.longitude,
-        latitude: that.data.latitude
-      },
-      success: res => {
-        console.log("初始化成功");
-      },
-      fail: err => {
-        console.log(err);
-        console.log("初始化失败");
+    //this.getpos();
+    wx.getLocation({
+      type: "wgs84",
+      success: function (res) {
+        that.setData({
+          latitude: res.latitude,
+          longitude: res.longitude,
+        });
+        wx.cloud.callFunction({
+          name: 'init',
+          //发送经度 维度 状态
+          data: {
+            longitude: that.data.longitude,
+            latitude: that.data.latitude
+          },
+          success: res => {
+            console.log("初始化成功");
+          },
+          fail: err => {
+            console.log(err);
+            console.log("初始化失败");
+          }
+        });
       }
-    })
+    });
+
+
   },
 
 
