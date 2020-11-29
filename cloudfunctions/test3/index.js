@@ -8,9 +8,9 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   db.collection('userdata').where({
     _openid: wxContext.OPENID
-  }).update({
+  }).update({data:{
     location: db.Geo.Point(event.longitude,event.latitude)
-  })
+  }})
 
   return {
     event,
