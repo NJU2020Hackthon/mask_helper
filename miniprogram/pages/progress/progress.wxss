@@ -1,0 +1,122 @@
+/* miniprogram/pages/progress/progress.wxss */
+.logistics-container {
+  width: 100%;
+  height: 100vh;
+  padding-top: 32rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #344047;
+  background-color: #f2f2f2;
+}
+
+.order-info-box {
+  width: 100%;
+  padding: 32rpx;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.order-info-box-item {
+  margin-bottom: 20rpx;
+}
+
+.order-info-box-item:last-child {
+  margin-bottom: 0;
+}
+
+.logistics-info {
+  width: 100%;
+  margin-top: 32rpx;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.logistics-info-title {
+  padding: 32rpx 0;
+  box-sizing: border-box;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.logistics-box {
+
+}
+
+.logistics-item {
+  width: 100%;
+  display: flex;
+}
+
+.logistics-item-left {
+  position: relative;
+  width: 60rpx;
+}
+
+.line-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-left: 29rpx;
+}
+
+.bg-gray {
+  background-color: #ccc;
+}
+
+.top-line {
+  width: 1px;
+  height: 50rpx;
+}
+
+.bottom-line {
+  flex: 1;
+  width: 1px;
+}
+
+.map-icon {
+  position: absolute;
+  top: 30rpx;
+  left: 9rpx;
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.center-circle {
+  position: absolute;
+  top: 44rpx;
+  left: 20rpx;
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+.logistics-item-right {
+  flex: 1;
+  padding: 32rpx 0;
+  box-sizing: border-box;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.color-gray {
+  color: #ccc;
+}
+
+.logistics-item-text {
+  margin-bottom: 10rpx;
+}
+
+.logistics-item-time {
+
+}
+
+.logistics-no-info {
+  padding: 40rpx 0;
+  box-sizing: border-box;
+  text-align: center;
+  color: #ccc;
+}

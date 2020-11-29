@@ -2,12 +2,17 @@
 page {
 }
 button{
-  width:100%;
+  width:200rpx;
+  height:100rpx;
   color:green;
-  position:fixed;
-  bottom:0;
-  opacity: 1;
+  text-align: center;
 }
+.navigator_hide{
+  display: none;
+ }
+ .navigator_show{
+  display: block;
+ }
 .submitview{
   width:100%;
   height:200rpx;
@@ -18,7 +23,7 @@ button{
   position: fixed;
   display:flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 .refresh{

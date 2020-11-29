@@ -36,13 +36,14 @@ Page({
         height: 20
       }
     ],
-    navigate_avail: false
+    navigate_avail: false,
+    neederhelper_id: "",
   },
 
   onLoad: function () {
     wx.showToast({
       title: '正在加载',
-      icon:"loading"
+      icon: "loading"
     })
     var that = this;
     this.getpos();
@@ -143,26 +144,32 @@ Page({
     this.watchTheMask();
   },
   onBtnclick_2: function () {
+    if (this.data.neederhelper_id === "") {
+      wx.showToast({
+        title: '尚无需要帮助者',
+        icon: "none",
+      });
+      return;
+    }
+    var that = this;
     // 调用云函数
     wx.cloud.callFunction({
-      name: 'test1',
+      name: 'insert_pair',
       //发送经度 维度 状态
       data: {
-        longitude: this.data.longitude,
-        latitude: this.data.latitude,
-        status: 3
+        needhelper_id: that.data.neederhelper_id
       },
       success: res => {
         this.setData({
           status: 3
         })
         wx.showToast({
-          title: '已录入信息',
+          title: '匹配成功，求助者正在来的路上',
         })
       },
       fail: err => {
         wx.showToast({
-          title: '录入信息失败',
+          title: '匹配失败',
         })
       }
     })
@@ -226,7 +233,7 @@ Page({
     if (!this.data.navigate_avail) {
       wx.showToast({
         title: '您尚未匹配',
-        icon:"none"
+        icon: "none"
       })
       return;
     }
@@ -298,11 +305,36 @@ Page({
       })
     }
   },
-  gettarget: function () {
-
-  },
-  //帮助者决定是否帮助某人
-  decide: function () {
+  //求助者监听到已经匹配 
+  aftermatch: function () {
+    let target_id = -1;
+    for (var i = 0; i < this.data.markers.length; i++) {
+      let t1 = this.data.markers[i].longitude;
+      let t2 = this.data.markers[i].latitude;
+      if(this.data.target_longitude===t1&&this.data.target_latitude===t2)
+      {
+        target_id = i;
+      }
+      var that = this;
+      wx.cloud.callFunction({
+        name: "hook_create",
+        data: {
+          helperid: that.data.markers[i]._openid
+        },
+        success: res => {
+          console.log("上传成功");
+          
+        },
+        fail: err => {
+          console.log(err);
+          console.log("上传失败");
+        }
+      })
+    };
+    var callout = {};
+    callout["content"] ="帮助者"
+    this.data.markers[target_id]["callout"] =callout;
+    console.log(this.data.markers);
 
   },
 
@@ -343,7 +375,7 @@ Page({
           that.setTargetLocation(res.data[0].location.longitude, res.data[0].location.latitude);
           that.setData({
             navigate_avail: true,
-          })
+          });
         }
       })
   },
@@ -361,7 +393,8 @@ Page({
             that.getGeoFrom_helpid(snapshot.docs[snapshot.docs.length - 1]._helpid);
             wx.showToast({
               title: '好心人已出现~请导航',
-            })
+            });
+            that.aftermatch();
             watcher.close();
           }
         },
