@@ -198,22 +198,33 @@ Page({
   sendpos: function () {
     
     var that = this;
-    this.getpos();
-    wx.cloud.callFunction({
-      name: 'test3',
-      //发送经度 维度 状态
-      data: {
-        longitude: that.data.longitude,
-        latitude: that.data.latitude
-      },
-      success: res => {
-        console.log("上传位置");
-      },
-      fail: err => {
-        console.log("上传失败");
+    //this.getpos();
+    wx.getLocation({
+      type: "wgs84",
+      success: function (res) {
+        that.setData({
+          latitude: res.latitude,
+          longitude: res.longitude,
+        });
+        wx.cloud.callFunction({
+          name: 'test3',
+          //发送经度 维度 状态
+          data: {
+            longitude: that.data.longitude,
+            latitude: that.data.latitude
+          },
+          success: res => {
+            console.log("上传位置");
+          },
+          fail: err => {
+            console.log("上传失败");
+          }
+        })
+
       }
     })
   },
+
   //导航到target
   get_mask_navigateTo: function () {
     let plugin = requirePlugin('routePlan');
