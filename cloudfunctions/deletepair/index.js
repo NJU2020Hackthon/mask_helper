@@ -7,7 +7,8 @@ const db = cloud.database()
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   db.collection('pair').where({
-    _openid: wxContext.OPENID
+    _openid: wxContext.OPENID,
+    _helpid: _.neq("")
   }).remove()
   return {
     event,

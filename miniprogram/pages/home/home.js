@@ -313,6 +313,14 @@ Page({
   
     //插入空项：请求帮助
     insertNeedMask:function(){
+      //删除
+      wx.cloud.callFunction({
+        name: 'deletepair',
+        data: {},
+        success: res => {
+          console.log("pair - 清空");
+        },
+      })
       db.collection('pair').add({
         // data 字段表示需新增的 JSON 数据
         data: {
