@@ -35,7 +35,7 @@ Page({
         height: 20
       }
     ],
-    first5:[]
+    navigate_avail:false
   },
 
   onLoad: function () {
@@ -223,6 +223,13 @@ Page({
   },
   navigator: function () {
     //gettarget();
+    if(!this.data.navigate_avail)
+    {
+      wx.showToast({
+        title: '您尚未匹配',
+      })
+      return;
+    }
     this.get_mask_navigateTo();
   },
   //获取所有点的数据
