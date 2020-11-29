@@ -196,6 +196,7 @@ Page({
   },
   //向服务器发送位置
   sendpos: function () {
+    
     var that = this;
     this.getpos();
     wx.cloud.callFunction({
@@ -317,7 +318,7 @@ Page({
       }
       var that = this;
       wx.cloud.callFunction({
-        name: "hook_create",
+        name: "hook_chenmo",
         data: {
           helperid: that.data.markers[i]._openid
         },
